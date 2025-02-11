@@ -14,12 +14,16 @@ export default function App() {
 
   function checkAnswer() {
     let totalResistance = 0;
+    let totalVoltage = 0;
 
     for (let row = 0; row < NUM_ROWS; row++) {
       for (let col = 0; col < NUM_COLUMNS; col++) {
         const value = gameState[row][col];
         if (value !== null && value.type === "resistor") {
           totalResistance += value.resistance;
+        }
+        if (value !== null && value.type === "Voltage Source") {
+          totalVoltage += value.Voltage;
         }
       }
     }
@@ -57,7 +61,10 @@ export default function App() {
           const isNotValidPlacement = !allowedCells.some(
             ([r, c]) => r === row && c === col
           );
-
+        if (value !== null && value.type === "Voltage Source") {
+          const isNotValidPlacement = !allowedCells.some(
+            ([r, c]) => r === row && c === col
+          );
           if (isNotValidPlacement) {
             allResistorsInValidPlaces = false;
           }
@@ -134,7 +141,7 @@ function Cell({ row, col, gameState, setGameState }) {
           setGameState(newGameState);
         } else {
           const element = prompt(
-            "Enter what element you want to add (resistor, capacitor):"
+            "Enter what element you want to add (resistor, voltage source, capacitor):"
           );
 
           if (element === "resistor") {
@@ -148,9 +155,20 @@ function Cell({ row, col, gameState, setGameState }) {
               };
               setGameState(newGameState);
             }
+          if (element === "Voltage Source") {
+            const Voltage = prompt("Enter the Voltage value:");
+            if (Voltage && !isNaN(Voltage)) {
+              const newGameState = structuredClone(gameState);
+              newGameState[row][col] = {
+                type: "Voltage Source",
+                Voltage: Number(Voltage),
+              };
+              setGameState(newGameState);
+            }
           }
         }
       }}
+    }
     >
       {value && value.type === "resistor" && (
         <div>
@@ -158,6 +176,13 @@ function Cell({ row, col, gameState, setGameState }) {
           <p className="text-lg font-bold">{value.resistance} Ω</p>
         </div>
       )}
+      {value && value.type === "Voltage Source" && (
+        <div>
+          <img src="/Voltage_Source.png" />
+          <p className="text-lg font-bold">{value.Voltage} V</p>
+        </div>
+      )}
     </button>
   );
+}
 }
