@@ -22,7 +22,7 @@ export default function App() {
         if (value !== null && value.type === "resistor") {
           totalResistance += value.resistance;
         }
-        if (value !== null && value.type === "Voltage Source") {
+        if (value !== null && value.type === "voltage source") {
           totalVoltage += value.Voltage;
         }
       }
@@ -61,7 +61,7 @@ export default function App() {
           const isNotValidPlacement = !allowedCells.some(
             ([r, c]) => r === row && c === col
           );
-        if (value !== null && value.type === "Voltage Source") {
+        if (value !== null && value.type === "voltage source") {
           const isNotValidPlacement = !allowedCells.some(
             ([r, c]) => r === row && c === col
           );
@@ -80,7 +80,7 @@ export default function App() {
       alert("Incorrect solution, keep trying.");
     }
   }
-
+  }
   return (
     <div className="p-4 grid grid-cols-[150px_1fr]">
       <div>
@@ -155,12 +155,12 @@ function Cell({ row, col, gameState, setGameState }) {
               };
               setGameState(newGameState);
             }
-          if (element === "Voltage Source") {
-            const Voltage = prompt("Enter the Voltage value:");
+          if (element === "voltage source") {
+            const Voltage = prompt("Enter the voltage value:");
             if (Voltage && !isNaN(Voltage)) {
               const newGameState = structuredClone(gameState);
               newGameState[row][col] = {
-                type: "Voltage Source",
+                type: "voltage source",
                 Voltage: Number(Voltage),
               };
               setGameState(newGameState);
@@ -176,7 +176,7 @@ function Cell({ row, col, gameState, setGameState }) {
           <p className="text-lg font-bold">{value.resistance} Ω</p>
         </div>
       )}
-      {value && value.type === "Voltage Source" && (
+      {value && value.type === "voltage source" && (
         <div>
           <img src="/Voltage_Source.png" />
           <p className="text-lg font-bold">{value.Voltage} V</p>
@@ -185,4 +185,4 @@ function Cell({ row, col, gameState, setGameState }) {
     </button>
   );
 }
-}
+
