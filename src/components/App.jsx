@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const NUM_COLUMNS = 10;
 const NUM_ROWS = 12;
@@ -9,8 +9,55 @@ export default function App() {
       Array.from({ length: NUM_COLUMNS }).fill(null)
     )
   );
+  const [level, setLevel] = useState(1);
 
-  console.log(gameState);
+  useEffect(() => {
+    console.log(gameState);
+    const newGameState =  Array.from({ length: NUM_ROWS }, () =>
+      Array.from({ length: NUM_COLUMNS }).fill(null)
+    );
+    for (let col = 2; col <= 7; col++) {
+      newGameState[2][col] = {
+        type: "wire_h"
+      };
+    }
+    for (let col = 2; col <= 8; col++) {
+      newGameState[5][col] = {
+        type: "wire_h"
+      };
+    }
+    newGameState[5][1] = {
+      type: "wire_c"
+    }
+    for (let row = 2; row <= 5; row++) {
+      newGameState[row][1] = {
+        type: "wire_v",
+      };
+      newGameState[3][1] = {
+        type: "voltage source"
+      }
+    }
+    for (let row = 2; row <= 4; row++) {
+      newGameState[row][8] = {
+        type: "wire_v"
+      };
+    }
+    newGameState[2][1] = {
+      type: "wire_c_tl"
+    }
+    newGameState[2][8] = {
+      type: "wire_c_tr"
+    }
+    newGameState[5][8] = {
+      type: "wire_c_br"
+    }
+    newGameState[5][1] = {
+      type: "wire_c_bl"
+    }
+    setGameState(newGameState)
+    alert("Create a circuit with an equivalent resistence of 20 with two resistors in series")
+  }, [level]);
+
 
   function checkAnswer() {
     let totalResistance = 0;
@@ -19,7 +66,7 @@ export default function App() {
     for (let row = 0; row < NUM_ROWS; row++) {
       for (let col = 0; col < NUM_COLUMNS; col++) {
         const value = gameState[row][col];
-        if (value !== null && value.type === "resistor") {
+        if (value !== null && value.type === "resistor") { //if value in column -1 & column +1= wire
           totalResistance += value.resistance;
         }
         if (value !== null && value.type === "voltage source") {
@@ -57,6 +104,7 @@ export default function App() {
       for (let col = 0; col < NUM_COLUMNS; col++) {
         const value = gameState[row][col]; // null or { type: 'resistor', resistance: 10 }
 
+
         if (value !== null && value.type === "resistor") {
           const isNotValidPlacement = !allowedCells.some(
             ([r, c]) => r === row && c === col
@@ -79,6 +127,7 @@ export default function App() {
     } else {
       alert("Incorrect solution, keep trying.");
     }
+    return;
   }
   }
   return (
@@ -86,8 +135,11 @@ export default function App() {
       <div>
         <p>Levels</p>
         <div className="mt-2">
-          <button className="bg-blue-500 text-white px-2 py-1 rounded-md font-medium">
-            1
+          <button 
+            className="bg-blue-500 text-white px-2 py-1 rounded-md font-medium"
+            onClick= {() => setLevel(1)}
+          >
+            {level}
           </button>
         </div>
 
@@ -119,12 +171,12 @@ export default function App() {
             ))}
           </div>
         ))}
-
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src="/Box.svg" className="w-half" />
-        </div>
+        
+        {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <img src="/wire_horiz.png" className="w-half" />
+        </div> */}
       </div>
-    </div>
+    </div> 
   );
 }
 
@@ -155,6 +207,7 @@ function Cell({ row, col, gameState, setGameState }) {
               };
               setGameState(newGameState);
             }
+          }
           if (element === "voltage source") {
             const Voltage = prompt("Enter the voltage value:");
             if (Voltage && !isNaN(Voltage)) {
@@ -165,24 +218,56 @@ function Cell({ row, col, gameState, setGameState }) {
               };
               setGameState(newGameState);
             }
+            
           }
-        }
       }}
     }
     >
       {value && value.type === "resistor" && (
-        <div>
-          <img src="/resistor.png" />
-          <p className="text-lg font-bold">{value.resistance} Ω</p>
+        <div className = "w-32 h-32 flex flex-col items-center justify-start">
+          <p className="text-lg font-bold mt-3">{value.resistance} Ω</p>
+          <img src="/resistor.png"/>
         </div>
       )}
       {value && value.type === "voltage source" && (
-        <div>
-          <img src="/Voltage_Source.png" />
-          <p className="text-lg font-bold">{value.Voltage} V</p>
-        </div>
+        <div className="w-25 h-32 flex items-center justify-center overflow-hidden">
+          <p className="absolute item-start justify-center text-lg font-bold bg-white bg-opacity-75 px-1 rounded">
+            {value.Voltage} V
+          </p>
+          <img src="/Voltage_Source.png" className="w-full h-full object-contain" />
+      </div>
+      )}
+      {value && value.type === "wire_h" && (
+        <div className="w-32 h-32 flex items-center justify-center overflow-hidden">
+          <img src="/wire_horiz.png" className="w-full h-full object-contain" />
+      </div>
+      )}
+      {value && value.type === "wire_v" && (
+        <div className="w-32 h-32 flex items-center justify-center overflow-hidden">
+          <img src="/wire_vert.png" className="w-full h-full object-contain" />
+      </div>
+      )}
+      {value && value.type === "wire_c_tl" && (
+        <div className="w-32 h-32 flex item-half item-half overflow-hidden">
+          <img src="/wire_corn_tl.png" className="w-full h-full object-contain mt-10 ml-9" />
+      </div>
+      )}
+      {value && value.type === "wire_c_tr" && (
+        <div className="w-32 h-32 flex item-half item-half overflow-hidden">
+          <img src="/wire_corn_tr.png" className="w-full h-full object-contain mt-10 mr-20" />
+      </div>
+      )}
+      {value && value.type === "wire_c_br" && (
+        <div className="w-32 h-32 flex item-half item-half overflow-hidden">
+          <img src="/wire_corn_br.png" className="w-half h-half object-contain mb-12 mr-12" />
+      </div>
+      )}
+      {value && value.type === "wire_c_bl" && (
+        <div className="w-32 h-32 flex item-half item-half overflow-hidden">
+          <img src="/wire_corn_bl.png" className="w-half h-half object-contain mb-11 ml-12" />
+      </div>
       )}
     </button>
   );
 }
-
+//use object oriented to create levels
