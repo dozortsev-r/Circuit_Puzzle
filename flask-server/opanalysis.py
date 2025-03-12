@@ -5,11 +5,8 @@ from PySpice.Spice.Netlist import Circuit
 
 def opanalysis(netlist):
     print(netlist)
-#     print('running opanalysis')
-    circuit = Circuit('Circuit Puzzle Tool')
-#     print('circuit created')
+    circuit = Circuit('Circuit Puzzle')
     logger = Logging.setup_logging()
-#     print('logger created')
     nodes_set = set()
     resistors = set()
     lines = netlist.split('\n')
