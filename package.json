@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "proxy":"http://127.0.0.1:5000",
   "dependencies": {
     "@astrojs/react": "^4.2.0",
     "@astrojs/tailwind": "^5.1.5",

@@ -7,7 +7,7 @@ const NUM_ROWS = 15;
 
 export default function App() {
   const levelOneMessage = "Level 1: Create a circuit with an equivalent resistance of 20 with two resistors in series."
-  const levelTwoMessage = "Wow you're really good at this. On to level two! \n Level 2: Dylan that looks really good"
+  const levelTwoMessage = "Level 2: Replace the resistors with resistors of values that get an equivalent current of 2mA"
   const [gameState, setGameState] = useState(
     Array.from({ length: NUM_ROWS }, () =>
       Array.from({ length: NUM_COLUMNS }).fill(null)
@@ -18,6 +18,20 @@ export default function App() {
   //default to levelOne message
   const [alertMessage, setAlertMessage] = useState(levelOneMessage)
   const [closeButton, setCloseButton] = useState("Start")
+
+  const [data, setData] = useState([{}])
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/members").then(
+      res => res.json()
+    ).then(
+      data => {
+      setData(data)
+        console.log(data)
+      }
+    )
+  }, [])
+
 
   useEffect(() => {
     console.log(level);
@@ -71,45 +85,252 @@ export default function App() {
       let newGameState = Array.from({ length: NUM_ROWS }, () =>
         Array.from({ length: NUM_COLUMNS }).fill(null)
       );
-      for (let col = 2; col <= 7; col++) {
+      for (let col = 4; col <= 7; col++) {
         newGameState[2][col] = {
           type: "wire_h",
         };
       }
       for (let col = 2; col <= 8; col++) {
-        newGameState[5][col] = {
+        newGameState[8][col] = {
           type: "wire_h",
         };
       }
-      newGameState[5][1] = {
+      newGameState[7][1] = {
         type: "wire_c",
       };
-      newGameState[4][1] = {
+      newGameState[6][1] = {
         type: "voltage source",
+        voltage: 20,
       };
-      for (let row = 2; row <= 4; row++) {
+      newGameState[7][1] = {
+        type: "wire_v",
+      };
+      for (let row =2; row <= 4; row++) {
         newGameState[row][8] = {
           type: "wire_v",
         };
       }
-      newGameState[3][1] = {
+      newGameState[4][1] = {
         type: "wire_c_tl",
       };
-      newGameState[3][2] = {
+      newGameState[4][2] = {
         type: "wire_h",
       };
-      newGameState[3][3] = {
+      newGameState[5][1] = {
+        type: "wire_v",
+      };
+      newGameState[4][3] = {
         type: "resistor",
       };
-      newGameState[2][8] = {
+      newGameState[4][4] = {
+        type: "wire_all",
+      };
+      newGameState[5][4] = {
+        type: "wire_v",
+      };
+      newGameState[6][4] = {
+        type: "vertical resistor",
+      };
+      newGameState[7][4] = {
+        type: "wire_v",
+      };
+      newGameState[8][4] = {
+        type: "wire_3_t",
+      };
+      newGameState[4][5] = {
+        type: "wire_h",
+      };
+      newGameState[4][6] = {
+        type: "resistor",
+      };
+      newGameState[4][7] = {
+        type: "wire_h",
+      };
+      newGameState[4][8] = {
+        type: "wire_3_l",
+      };
+      newGameState[2][6] = {
+        type: "resistor",
+      };
+      newGameState[2][4] = {
+        type: "wire_3_r",
+      };
+      newGameState[1][4] = {
+        type: "wire_v",
+      };
+      newGameState[0][4] = {
+        type: "wire_c_tl",
+      };
+      newGameState[0][5] = {
+        type: "wire_h",
+      };
+      newGameState[0][6] = {
+        type: "wire_h",
+      };
+      newGameState[0][7] = {
+        type: "resistor",
+      };
+      newGameState[0][8] = {
+        type: "wire_h",
+      };
+      newGameState[0][9] = {
+        type: "wire_h",
+      };
+      newGameState[0][10] = {
+        type: "wire_h",
+      };
+      newGameState[0][11] = {
+        type: "wire_h",
+      };
+      newGameState[0][12] = {
         type: "wire_c_tr",
       };
-      newGameState[5][8] = {
-        type: "wire_c_br",
+      newGameState[1][12] = {
+        type: "wire_v",
       };
-      newGameState[5][1] = {
+      for (let col =2; col <= 4; col++) {
+        newGameState[col][12] = {
+          type: "wire_v",
+        };
+      }
+      newGameState[5][12] = {
+        type: "vertical resistor",
+      };
+      for (let col =6; col <= 7; col++) {
+        newGameState[col][12] = {
+          type: "wire_v",
+        };
+      }
+      newGameState[3][4] = {
+        type: "wire_v",
+      };
+      newGameState[2][8] = {
+        type: "wire_3_b",
+      };
+      newGameState[2][9] = {
+        type: "wire_h",
+      };
+      newGameState[2][10] = {
+        type: "wire_c_tr",
+      };
+      newGameState[3][10] = {
+        type: "wire_v",
+      };
+      newGameState[4][10] = {
+        type: "wire_v",
+      };
+      newGameState[5][10] = {
+        type: "vertical resistor",
+      };
+      newGameState[6][10] = {
+        type: "wire_v",
+      };
+      newGameState[7][10] = {
+        type: "wire_v",
+      };
+      newGameState[8][1] = {
         type: "wire_c_bl",
       };
+      newGameState[5][8] = {
+        type: "wire_v",
+      };
+      newGameState[6][8] = {
+        type: "vertical resistor",
+      };
+      newGameState[7][8] = {
+        type: "wire_v",
+      };
+      newGameState[8][8] = {
+        type: "wire_3_t",
+      };
+      newGameState[8][9] = {
+        type: "wire_h",
+      };
+      newGameState[8][10] = {
+        type: "wire_3_t",
+      };
+      newGameState[8][11] = {
+        type: "wire_h",
+      };
+      newGameState[8][12] = {
+        type: "wire_c_br",
+      };
+      setGameState(newGameState);
+      setIsAlertPopupOpen(true);
+      setAlertMessage(levelTwoMessage)
+    } else if (level === 3) {
+      let newGameState = Array.from({ length: NUM_ROWS }, () =>
+        Array.from({ length: NUM_COLUMNS }).fill(null)
+      );
+      for (let col = 2; col <= 7; col++) {
+        newGameState[2][col] = {
+          type: "wire_h",
+        };
+      }
+      newGameState[2][3] = {
+        type: "resistor",
+        resistance: 1,
+      };
+      newGameState[2][5] = {
+        type: "wire_3_b",
+      };
+      newGameState[2][7] = {
+        type: "resistor",
+        resistance: 10,
+      };
+      newGameState[2][8] = {
+        type: "wire_h",
+      };
+      newGameState[2][9] = {
+        type: "wire_c_tr",
+      };
+      for (let col = 2; col <= 8; col++) {
+        newGameState[8][col] = {
+          type: "wire_h",
+        };
+      }
+      newGameState[5][1] = {
+        type: "voltage source",
+        voltage: 20,
+      };
+      for (let row = 3; row <= 4; row++) {
+        newGameState[row][1] = {
+          type: "wire_v",
+        };
+      }
+      for (let row = 6; row <= 7; row++) {
+        newGameState[row][1] = {
+          type: "wire_v",
+        };
+      }
+      newGameState[2][1] = {
+        type: "wire_c_tl",
+      };
+      newGameState[8][1] = {
+        type: "wire_c_bl",
+      };
+      newGameState[8][9] = {
+        type: "wire_c_br",
+      };
+      for (let row = 3; row <= 7; row++) {
+        newGameState[row][9] = {
+          type: "wire_v",
+        };
+      }
+      for (let row = 3; row <= 7; row++) {
+        newGameState[row][5] = {
+          type: "wire_v",
+        };
+      }
+      newGameState[5][5] = {
+        type: "vertical resistor",
+        resistance: 5,
+      };
+      newGameState[8][5] = {
+        type: "wire_3_t",
+      };
+      
+  
       setGameState(newGameState);
       setIsAlertPopupOpen(true);
       setAlertMessage(levelTwoMessage)

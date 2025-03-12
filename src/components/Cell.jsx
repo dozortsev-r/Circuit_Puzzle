@@ -27,13 +27,25 @@ export default function Cell({ row, col, gameState, setGameState }) {
               setGameState(newGameState);
             }
           }
+          if (element === "vertical resistor") {
+            const resistance = prompt("Enter the resistance value:");
+
+            if (resistance && !isNaN(resistance)) {
+              const newGameState = structuredClone(gameState);
+              newGameState[row][col] = {
+                type: "vertical resistor",
+                resistance: Number(resistance),
+              };
+              setGameState(newGameState);
+            }
+          }
           if (element === "voltage source") {
-            const Voltage = prompt("Enter the voltage value:");
-            if (Voltage && !isNaN(Voltage)) {
+            const voltage = prompt("Enter the voltage value:");
+            if (voltage && !isNaN(voltage)) {
               const newGameState = structuredClone(gameState);
               newGameState[row][col] = {
                 type: "voltage source",
-                Voltage: Number(Voltage),
+                voltage: Number(voltage),
               };
               setGameState(newGameState);
             }
@@ -48,12 +60,19 @@ export default function Cell({ row, col, gameState, setGameState }) {
           
         </div>
       )}
+      {value && value.type === "vertical resistor" && (
+        <div className="flex flex-row items-center justify-start overflow-hidden">
+          <p className="text-sm font-bold">{value.resistance} Ω</p>
+          <img src="/resistor_v.png" className="w-20 h-20 object-contain mr-2"/>
+          
+        </div>
+      )}
       {value && value.type === "voltage source" && (
         <div className="flex items-center justify-center overflow-hidden">
-          <p className="absolute item-start justify-center text-sm font-bold bg-white bg-opacity-75 px-1 rounded">
-            {value.Voltage} V
+          <p className="absolute item-start justify-center text-sm font-bold bg-white bg-opacity-75 px-1 rounded ml-1">
+            {value.voltage} V
           </p>
-          <img src="/Voltage_Source.png" className="w-20 h-20 object-contain" />
+          <img src="/Voltage_Source.png" className="w-20 h-20 object-contain ml-1" />
         </div>
       )}
       {value && value.type === "wire_h" && (
@@ -70,7 +89,7 @@ export default function Cell({ row, col, gameState, setGameState }) {
         <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
           <img
             src="/wire_corn_tl.png"
-            className="max-w-[75%] max-h-[65%] object-contain ml-7 mt-8"
+            className="max-w-[75%] max-h-[65%] object-contain ml-8 mt-8"
           />
         </div>
       )}
@@ -96,6 +115,31 @@ export default function Cell({ row, col, gameState, setGameState }) {
             src="/wire_corn_bl.png"
             className="max-w-[80%] max-h-[65%] object-contain ml-8 mb-7"
           />
+        </div>
+      )}
+      {value && value.type === "wire_all" && (
+        <div className="flex items-center justify-center overflow-hidden">
+          <img src="/wire_all.png" className="w-full h-full object-contain" />
+        </div>
+      )}
+      {value && value.type === "wire_3_l" && (
+        <div className="flex items-center justify-center overflow-hidden">
+          <img src="/wire_3_l.png" className="w-full h-full object-contain" />
+        </div>
+      )}
+      {value && value.type === "wire_3_r" && (
+        <div className="flex items-center justify-center overflow-hidden">
+          <img src="/wire_3_r.png" className="w-full h-full object-contain" />
+        </div>
+      )}
+      {value && value.type === "wire_3_b" && (
+        <div className="flex items-center justify-center overflow-hidden">
+          <img src="/wire_3_b.png" className="w-full h-full object-contain" />
+        </div>
+      )}
+      {value && value.type === "wire_3_t" && (
+        <div className="flex items-center justify-center overflow-hidden">
+          <img src="/wire_3_t.png" className="w-full h-full object-contain" />
         </div>
       )}
     </button>
