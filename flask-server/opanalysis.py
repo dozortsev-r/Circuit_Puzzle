@@ -54,6 +54,7 @@ def opanalysis(netlist):
 #     if you get errors here make sure to run after navigating to where your python files are stored. You may have to run the function with a ./ in front
 #                                         pyspice-post-installation --install-ngspice-dll
 #                                         to properly install ngspice
+#                                         need to brew install ngspice
     # print(nodes_set)
 
     print("got here")
