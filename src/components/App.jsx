@@ -20,19 +20,7 @@ export default function App() {
   const [closeButton, setCloseButton] = useState("Start")
 
   const [data, setData] = useState([{}])
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/members").then(
-      res => res.json()
-    ).then(
-      data => {
-      setData(data)
-        console.log(data)
-      }
-    )
-  }, [])
-
-
+  
   useEffect(() => {
     console.log(level);
     setCloseButton("Start")
@@ -338,7 +326,7 @@ export default function App() {
     
   }, [level]);
 
-  function checkAnswer() {
+  async function checkAnswer() {
     let totalResistance = 0;
     let totalVoltage = 0;
 
@@ -401,6 +389,30 @@ export default function App() {
 
       const isCorrect = totalResistance === 20 && allResistorsInValidPlaces;
 
+      const netlist = convertGridToNetlist(gameState)
+      try {
+        const toSend = JSON.stringify({ netlist })
+        const response = fetch("http://127.0.0.1:5000/opa", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: toSend
+        })
+        .then(response => response.json)  // Parse the JSON response
+        .then(data => {
+          console.log('succeeded', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    
+        const data = await response.json;
+        console.log("Circuit Analysis Result:", data);
+      } catch (error) {
+        console.error("Error analyzing circuit:", error);
+      }
+
       if (isCorrect) {
         setAlertMessage("Correct Solution!")
         setCloseButton("Continue")
@@ -413,6 +425,37 @@ export default function App() {
       return;
     }
   }
+  const convertGridToNetlist = (grid) => {
+    let netlist = "";
+    let idCounter = { R: 1, V: 1 };
+    
+    grid.forEach((row, rowIndex) => {
+      row.forEach((cell, colIndex) => {
+        if (cell && (cell.type === "voltage source" || cell.type === "resistor" || cell.type === "vertical resistor")){
+          //TODO not setting the nodes up right
+          let node1 = null;
+          let node2 = null;
+          if (cell.type === "resistor"){
+            node1 = `N${rowIndex}_${colIndex - 1}`;
+            node2 = `N${rowIndex}_${colIndex + 1}`;
+          } else if (cell.type === "vertical resistor"){
+            node1 = `N${rowIndex - 1}_${colIndex}`;
+            node2 = `N${rowIndex + 1}_${colIndex}`;
+          }
+
+          if ((cell.type === "resistor" || cell.type === "vertical resistor") && cell.resistance != undefined) {
+            netlist += `R${idCounter.R} ${node1} ${node2} ${cell.resistance}\n`;
+            idCounter.R++
+          } else if (cell.type === "voltage source" && cell.Voltage != undefined) {
+            netlist += `V${idCounter.V} ${node1} ${node2} ${cell.Voltage}\n`
+            idCounter.V++
+          } 
+        }
+      });
+    });
+  
+    return netlist;
+  };
   return isAlertPopupOpen ? (
       <AlertPopup 
         isAlertPopupOpen={isAlertPopupOpen} 

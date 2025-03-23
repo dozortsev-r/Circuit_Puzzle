@@ -67,6 +67,13 @@ export default function Cell({ row, col, gameState, setGameState }) {
           
         </div>
       )}
+      {value && value.type === "capacitor" && (
+        <div className="flex flex-col items-center justify-start overflow-hidden">
+          <p className="text-sm font-bold">{value.capacitance} F</p>
+          <img src="/Capacitor.svg.png" className="w-half h-half object-contain mb-20"/>
+          
+        </div>
+      )}
       {value && value.type === "voltage source" && (
         <div className="flex items-center justify-center overflow-hidden">
           <p className="absolute item-start justify-center text-sm font-bold bg-white bg-opacity-75 px-1 rounded ml-1">
