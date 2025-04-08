@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Cell from "./Cell.jsx";
 import AlertPopup from "./AlertPopup.jsx";
+import NodeVoltage from "./NodeVoltage.jsx"
 
 const NUM_COLUMNS = 20;
 const NUM_ROWS = 15;
@@ -21,8 +22,9 @@ export default function App() {
 
   const [data, setData] = useState([{}])
   
+  const nodeNames = ["wire_all", "wire_3_t", "wire_3_b", "wire_3_l", "wire_3_r", "voltage source"]
+
   useEffect(() => {
-    console.log(level);
     setCloseButton("Start")
     if (level === 1) {
       let newGameState = Array.from({ length: NUM_ROWS }, () =>
@@ -38,9 +40,6 @@ export default function App() {
           type: "wire_h",
         };
       }
-      newGameState[5][1] = {
-        type: "wire_c",
-      };
       for (let row = 2; row <= 5; row++) {
         newGameState[row][1] = {
           type: "wire_v",
@@ -109,6 +108,8 @@ export default function App() {
       };
       newGameState[4][3] = {
         type: "resistor",
+        resistance: "R1",
+        id: "R1",
       };
       newGameState[4][4] = {
         type: "wire_all",
@@ -118,6 +119,7 @@ export default function App() {
       };
       newGameState[6][4] = {
         type: "vertical resistor",
+        resistance: 20,
       };
       newGameState[7][4] = {
         type: "wire_v",
@@ -130,6 +132,8 @@ export default function App() {
       };
       newGameState[4][6] = {
         type: "resistor",
+        resistance: "R2",
+        id: "R2",
       };
       newGameState[4][7] = {
         type: "wire_h",
@@ -139,6 +143,7 @@ export default function App() {
       };
       newGameState[2][6] = {
         type: "resistor",
+        resistance: "3",
       };
       newGameState[2][4] = {
         type: "wire_3_r",
@@ -157,6 +162,8 @@ export default function App() {
       };
       newGameState[0][7] = {
         type: "resistor",
+        resistance: "R4",
+        id: "R4",
       };
       newGameState[0][8] = {
         type: "wire_h",
@@ -183,6 +190,7 @@ export default function App() {
       }
       newGameState[5][12] = {
         type: "vertical resistor",
+        resistance: 18,
       };
       for (let col =6; col <= 7; col++) {
         newGameState[col][12] = {
@@ -209,6 +217,7 @@ export default function App() {
       };
       newGameState[5][10] = {
         type: "vertical resistor",
+        resistance: 6,
       };
       newGameState[6][10] = {
         type: "wire_v",
@@ -224,6 +233,8 @@ export default function App() {
       };
       newGameState[6][8] = {
         type: "vertical resistor",
+        resistance: "R3",
+        id: "R3",
       };
       newGameState[7][8] = {
         type: "wire_v",
@@ -257,7 +268,7 @@ export default function App() {
       }
       newGameState[2][3] = {
         type: "resistor",
-        resistance: 1,
+        resistance: 5,
       };
       newGameState[2][5] = {
         type: "wire_3_b",
@@ -270,8 +281,34 @@ export default function App() {
         type: "wire_h",
       };
       newGameState[2][9] = {
+        type: "wire_3_b",
+      };
+      newGameState[2][10] = {
+        type: "wire_h",
+      };
+      newGameState[2][11] = {
         type: "wire_c_tr",
       };
+      for (let row = 3; row <= 4; row++) {
+        newGameState[row][11] = {
+          type: "wire_v",
+        };
+      }
+      newGameState[5][11] = {
+        type: "vertical resistor",
+        resistance: 5,
+      };
+      for (let row = 6; row <= 7; row++) {
+        newGameState[row][11] = {
+          type: "wire_v",
+        };
+        newGameState[8][11] = {
+          type: "wire_c_br",
+        };
+        newGameState[8][10] = {
+          type: "wire_h",
+        };
+      }
       for (let col = 2; col <= 8; col++) {
         newGameState[8][col] = {
           type: "wire_h",
@@ -298,7 +335,7 @@ export default function App() {
         type: "wire_c_bl",
       };
       newGameState[8][9] = {
-        type: "wire_c_br",
+        type: "wire_3_t",
       };
       for (let row = 3; row <= 7; row++) {
         newGameState[row][9] = {
@@ -317,6 +354,10 @@ export default function App() {
       newGameState[8][5] = {
         type: "wire_3_t",
       };
+      newGameState[5][9] = {
+        type: "vertical resistor",
+        resistance: 5,
+      };
       
   
       setGameState(newGameState);
@@ -329,12 +370,12 @@ export default function App() {
   async function checkAnswer() {
     let totalResistance = 0;
     let totalVoltage = 0;
-
+    //if (level==1){
     for (let row = 0; row < NUM_ROWS; row++) {
       for (let col = 0; col < NUM_COLUMNS; col++) {
         const value = gameState[row][col];
         if (value !== null && value.type === "resistor") {
-          //if value in column -1 & column +1= wire
+        //if value in column -1 & column +1= wire
           totalResistance += value.resistance;
         }
         if (value !== null && value.type === "voltage source") {
@@ -342,6 +383,23 @@ export default function App() {
         }
       }
     }
+
+    //}
+    // } else if (level==2) {
+    //   for (let row = 0; row < NUM_ROWS; row++) {
+    //     for (let col = 0; col < NUM_COLUMNS; col++) {
+    //      const value = gameState[row][col];
+    //      if (value !== null && value.type === "resistor") {
+    //       //if value in column -1 & column +1= wire
+    //        totalResistance = R4+18;
+    //      }
+    //      if (value !== null && value.type === "voltage source") {
+    //         totalVoltage += value.Voltage;
+    //      }
+    //     }
+    //  }
+    // }
+    
 
     const allowedCells = [
       [4, 1],
@@ -370,13 +428,13 @@ export default function App() {
 
     for (let row = 0; row < NUM_ROWS; row++) {
       for (let col = 0; col < NUM_COLUMNS; col++) {
-        const value = gameState[row][col]; // null or { type: 'resistor', resistance: 10 }
+        const cell = gameState[row][col]; // null or { type: 'resistor', resistance: 10 }
 
-        if (value !== null && value.type === "resistor") {
+        if (cell !== null && cell.type === "resistor") {
           const isNotValidPlacement = !allowedCells.some(
             ([r, c]) => r === row && c === col
           );
-          if (value !== null && value.type === "voltage source") {
+          if (cell !== null && cell.type === "voltage source") {
             const isNotValidPlacement = !allowedCells.some(
               ([r, c]) => r === row && c === col
             );
@@ -387,9 +445,27 @@ export default function App() {
         }
       }
 
+      let nodes = []
+      gameState.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          if (cell != null && nodeNames.includes(cell.type)){
+            var toAdd = {
+              type: cell.type,
+              row: rowIndex,
+              col: colIndex,
+            }
+            nodes.push(toAdd)
+          }
+        });
+      });
+
+       console.log("the length, ", nodes.length)
       const isCorrect = totalResistance === 20 && allResistorsInValidPlaces;
 
-      const netlist = convertGridToNetlist(gameState)
+      let nodeVoltage = new NodeVoltage(gameState, nodes)
+      nodeVoltage.solve()
+      let netlist = nodeVoltage.finalNetList
+
       try {
         const toSend = JSON.stringify({ netlist })
         const response = fetch("http://127.0.0.1:5000/opa", {
@@ -406,7 +482,6 @@ export default function App() {
         .catch(error => {
           console.error('Error:', error);
         });
-    
         const data = await response.json;
         console.log("Circuit Analysis Result:", data);
       } catch (error) {
@@ -425,37 +500,6 @@ export default function App() {
       return;
     }
   }
-  const convertGridToNetlist = (grid) => {
-    let netlist = "";
-    let idCounter = { R: 1, V: 1 };
-    
-    grid.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell && (cell.type === "voltage source" || cell.type === "resistor" || cell.type === "vertical resistor")){
-          //TODO not setting the nodes up right
-          let node1 = null;
-          let node2 = null;
-          if (cell.type === "resistor"){
-            node1 = `N${rowIndex}_${colIndex - 1}`;
-            node2 = `N${rowIndex}_${colIndex + 1}`;
-          } else if (cell.type === "vertical resistor"){
-            node1 = `N${rowIndex - 1}_${colIndex}`;
-            node2 = `N${rowIndex + 1}_${colIndex}`;
-          }
-
-          if ((cell.type === "resistor" || cell.type === "vertical resistor") && cell.resistance != undefined) {
-            netlist += `R${idCounter.R} ${node1} ${node2} ${cell.resistance}\n`;
-            idCounter.R++
-          } else if (cell.type === "voltage source" && cell.Voltage != undefined) {
-            netlist += `V${idCounter.V} ${node1} ${node2} ${cell.Voltage}\n`
-            idCounter.V++
-          } 
-        }
-      });
-    });
-  
-    return netlist;
-  };
   return isAlertPopupOpen ? (
       <AlertPopup 
         isAlertPopupOpen={isAlertPopupOpen} 

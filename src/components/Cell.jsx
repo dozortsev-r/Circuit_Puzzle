@@ -12,7 +12,7 @@ export default function Cell({ row, col, gameState, setGameState }) {
           setGameState(newGameState);
         } else {
           const element = prompt(
-            "Enter what element you want to add (resistor, voltage source, capacitor):"
+            "Enter what element you want to add (resistor, vertical resistor, voltage source, capacitor):"
           );
 
           if (element === "resistor") {
@@ -50,6 +50,17 @@ export default function Cell({ row, col, gameState, setGameState }) {
               setGameState(newGameState);
             }
           }
+          if (element === "capacitor") {
+            const capacitance = prompt("Enter the capacitance value:");
+            if (capacitance && !isNaN(capacitance)) {
+              const newGameState = structuredClone(gameState);
+              newGameState[row][col] = {
+                type: "capacitor",
+                capacitance: Number(capacitance),
+              };
+              setGameState(newGameState);
+            }
+          }
         }
       }}
     >
@@ -61,9 +72,9 @@ export default function Cell({ row, col, gameState, setGameState }) {
         </div>
       )}
       {value && value.type === "vertical resistor" && (
-        <div className="flex flex-row items-center justify-start overflow-hidden">
-          <p className="text-sm font-bold">{value.resistance} Ω</p>
-          <img src="/resistor_v.png" className="w-20 h-20 object-contain mr-2"/>
+        <div className="flex flex-row items-center justify-start overflow-visible">
+          <p className="text-sm font-bold transform rotate-90">{value.resistance} Ω</p>
+          <img src="/resistor_v.png" className="absolute w-20 h-20 object-contain"/>
           
         </div>
       )}
